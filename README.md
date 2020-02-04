@@ -1,6 +1,15 @@
 # atlas-data-import
 Scripts for extracting expression- and metadata from SCXA in a programmatic way. 
 
+### Installation 
+Package is installed via conda. To avoid dependency conflicts, it is recommended to install into fresh environment:
+
+```
+conda create -n <env_name>
+conda activate <env_name>
+conda install -c ebi-gene-expression-group atlas-data-import
+```
+
 ### Obtain study data from Single Cell Expression Atlas 
 ```
 get_experiment_data.R\
