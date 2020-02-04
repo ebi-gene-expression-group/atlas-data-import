@@ -6,6 +6,7 @@ suppressPackageStartupMessages(require(optparse))
 suppressPackageStartupMessages(require(workflowscriptscommon))
 suppressPackageStartupMessages(require(R.utils))
 suppressPackageStartupMessages(require(yaml))
+suppressPackageStartupMessages(require(RCurl))
 
 
 option_list = list(
@@ -15,6 +16,13 @@ option_list = list(
         default = NA,
         type = 'character',
         help = "Accession code of the data set to be extracted"
+    ),
+    make_option(
+        c("-f", "--config-file"),
+        action = "store",
+        default = NA,
+        type = 'character',
+        help = "Config file in .yaml format"
     ),
     make_option(
         c("-d", "--expr-data-type"),
@@ -119,9 +127,18 @@ if(!is.na(opt$output_dir_name)){
     }
 }
 dir.create(output_dir)
+
 # build generic url prefix
-config = yaml.load_file("config.yaml")
-scxa_prefix = config$scxa_prefix
+if(!is.na(opt$config_file)){
+    config = yaml.load_file(opt$config_file)
+    scxa_prefix = config$scxa_prefix
+    if(!url.exists(scxa_prefix)){
+        stop("Incorrect 'scxa_prefix' parameter provided in config file. Page does not exist")
+    }
+} else {
+    scxa_prefix = "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments"
+}
+
 url_prefix = paste(scxa_prefix, acc, acc, sep="/")
 if(data_type == "RAW"){
     expr_prefix = paste(url_prefix, "aggregated_counts", sep=".")
@@ -146,12 +163,12 @@ file_names = c("matrix.mtx", "barcodes.tsv", "genes.tsv")
 dir.create(paste(output_dir, opt$exp_data_dir, sep="/"))
 for(idx in seq_along(expr_data)){
     url = paste(expr_prefix, expr_data[idx], sep=".")
+    if(!url.exists(url)){
+        stop(paste("File", url, "does not exist"))
+    }
     base_name = basename(url)
     out_path = paste(output_dir, opt$exp_data_dir, base_name, sep="/")
     download.file(url=url, destfile=out_path)
-    if(!file.exists(out_path)){
-        stop(paste0("Failed to download file:", url))
-    }
     # decompress files 
     if(summary(file(out_path))$class == 'gzfile'){
         gunzip(out_path, overwrite = TRUE, remove = TRUE)
@@ -179,6 +196,7 @@ names = c("sdrf.*", "condensed-sdrf.*", "idf.txt", markers)
 for(idx in seq_along(non_expr_files)){
     if(non_expr_files[idx]){
         url = paste(url_prefix, names[idx], sep=".")
+        if(!url.exists(url)) stop(paste("File", url, "does not exist"))
         system(paste("wget", url, "-P", output_dir))
     }
 }
