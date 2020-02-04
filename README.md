@@ -12,8 +12,10 @@ get_experiment_data.R\
             --use-default-names <should default names be used?>\
             --exp-data-dir <name for expression data directory>\
             --get-sdrf <boolean; should SDRF files be imported?>\
+            --get-condensed-sdrf <boolean; should condensed SDRF be imported?>\
             --get-idf <boolean; should IDF files be imported?>\
-            --get-marker-genes <boolean; should marker genes file be imported?>
+            --get-marker-genes <boolean; should marker genes be imported?>\
+            --number-of-clusters <number of clusters for marker gene file>
 
 ```
 

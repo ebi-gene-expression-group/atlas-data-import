@@ -66,6 +66,13 @@ option_list = list(
         help = "Should SDRF file(s) be downloaded? Default: FALSE"
     ),
     make_option(
+        c("-k", "--get-condensed-sdrf"),
+        action = "store_true",
+        default = FALSE,
+        type = 'logical',
+        help = "Should condensed SDRF file(s) be downloaded? Default: FALSE"
+    ),
+    make_option(
         c("-i", "--get-idf"),
         action = "store_true",
         default = FALSE,
@@ -78,6 +85,13 @@ option_list = list(
         default = FALSE,
         type = 'logical',
         help = "Should marker gene file(s) be downloaded? Default: FALSE"
+    ), 
+    make_option(
+        c("-g", "--number-of-clusters"),
+        action = "store",
+        default = NA,
+        type = 'integer',
+        help = "Number of clusters for marker gene file"
     )
 )
 
@@ -152,8 +166,16 @@ for(idx in seq_along(expr_data)){
 }
 
 # download metadata & marker files, if specified
-non_expr_files = c(opt$get_sdrf, opt$get_idf, opt$get_marker_genes)
-names = c("*sdrf.t*", "idf.txt", "marker_genes_*") 
+non_expr_files = c(opt$get_sdrf, opt$get_condensed_sdrf, opt$get_idf, opt$get_marker_genes)
+
+# build file names 
+if(opt$get_marker_genes & !is.na(opt$number_of_clusters)){
+    markers = paste("marker_genes_", opt$number_of_clusters, "*", sep="")
+} else {
+    markers = "marker_genes_*"
+}
+
+names = c("sdrf.*", "condensed-sdrf.*", "idf.txt", markers) 
 for(idx in seq_along(non_expr_files)){
     if(non_expr_files[idx]){
         url = paste(url_prefix, names[idx], sep=".")
