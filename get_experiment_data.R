@@ -5,6 +5,7 @@
 suppressPackageStartupMessages(require(optparse))
 suppressPackageStartupMessages(require(workflowscriptscommon))
 suppressPackageStartupMessages(require(R.utils))
+suppressPackageStartupMessages(require(yaml))
 
 
 option_list = list(
@@ -24,7 +25,7 @@ option_list = list(
     ),
     make_option(
         c("-n", "--normalisation-method"),
-        action = "store_true",
+        action = "store",
         default = NA,
         type = 'character',
         help = "Normalisation method ('TPM' or 'CPM'). Needs to be specified if --expr-data-type is set to 'normalised'"
@@ -91,7 +92,7 @@ if(!data_type %in% c("RAW", "FILTERED", "NORMALISED")){
 }
 # check normalisation method
 if(data_type == "NORMALISED" & !norm_method %in% c("CPM", "TPM")){
-    stop(paste("Empty or incorrect argument provided for normalisation-method:", norm_method))
+    stop(paste("Empty or incorrect argument provided for --normalisation-method parameter:", norm_method))
 }
 
 # build output dir path
@@ -105,7 +106,9 @@ if(!is.na(opt$output_dir_name)){
 }
 dir.create(output_dir)
 # build generic url prefix
-url_prefix = paste("ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments", acc, acc, sep="/")
+config = yaml.load_file("config.yaml")
+scxa_prefix = config$scxa_prefix
+url_prefix = paste(scxa_prefix, acc, acc, sep="/")
 if(data_type == "RAW"){
     expr_prefix = paste(url_prefix, "aggregated_counts", sep=".")
 } else if(data_type == "FILTERED"){
