@@ -27,7 +27,8 @@ get_experiment_data.R\
             --get-condensed-sdrf <boolean; should condensed SDRF be imported?>\
             --get-idf <boolean; should IDF files be imported?>\
             --get-marker-genes <boolean; should marker genes be imported?>\
-            --number-of-clusters <number of clusters for marker gene file>
+            --number-of-clusters <number of clusters for marker gene file>\
+            --use-full-names <should non-expression data files be named with full file names? Default: FALSE>
 
 ```
 
