@@ -53,11 +53,11 @@ option_list = list(
         help = "Name of the output directory containing study data. Default directory name is the provided accession code"
     ),
     make_option(
-        c("-x", "--use-default-names"),
+        c("-x", "--use-default-expr-names"),
         action = "store_true",
         default = FALSE,
         type = 'logical',
-        help = "Should default (non 10x-type) file names be used? Default: TRUE"
+        help = "Should default (non 10x-type) file names be used for expression data? Default: FALSE"
     ),
     make_option(
         c("-t", "--exp-data-dir"),
@@ -100,6 +100,13 @@ option_list = list(
         default = NA,
         type = 'integer',
         help = "Number of clusters for marker gene file"
+    ),
+    make_option(
+        c("-u", "--use-full-names"),
+        action = "store_true",
+        default = FALSE,
+        type = 'logical',
+        help = "Should non-expression data files be named with full file names? Default: FALSE"
     )
 )
 
@@ -175,7 +182,7 @@ for(idx in seq_along(expr_data)){
         out_path = sub(".gz", "", out_path)
     }
     # rename files if necessary
-    if(!opt$use_default_names){
+    if(!opt$use_default_expr_names){
         base_name = file_names[idx]
         upd_out_path = sub(basename(out_path), base_name, out_path)
         file.rename(out_path, upd_out_path)
@@ -187,16 +194,24 @@ non_expr_files = c(opt$get_sdrf, opt$get_condensed_sdrf, opt$get_idf, opt$get_ma
 
 # build file names 
 if(opt$get_marker_genes & !is.na(opt$number_of_clusters)){
-    markers = paste("marker_genes_", opt$number_of_clusters, "*", sep="")
+    markers = paste("marker_genes_", opt$number_of_clusters, ".tsv", sep="")
+    multiple_markers = FALSE
 } else {
     markers = "marker_genes_*"
+    multiple_markers = TRUE
 }
 
-names = c("sdrf.*", "condensed-sdrf.*", "idf.txt", markers) 
+names = c("sdrf.txt", "condensed-sdrf.tsv", "idf.txt", markers) 
 for(idx in seq_along(non_expr_files)){
     if(non_expr_files[idx]){
         url = paste(url_prefix, names[idx], sep=".")
         if(!url.exists(url)) stop(paste("File", url, "does not exist"))
         system(paste("wget", url, "-P", output_dir))
+        # do not rename if multiple marker files downloaded
+        if(!opt$use_full_names & !(idx==4 & multiple_markers)){
+            i = paste(output_dir, basename(url), sep="/")
+            o = paste(output_dir, names[idx], sep="/")
+            file.rename(i, o)
+        }
     }
 }
