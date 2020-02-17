@@ -9,8 +9,6 @@ conda create -n <env_name>
 conda activate <env_name>
 conda install -c ebi-gene-expression-group atlas-data-import
 ```
-To see help pages for the scripts, enter `<script_name> --help`
-
 
 ### Obtain study data from Single Cell Expression Atlas 
 ```
