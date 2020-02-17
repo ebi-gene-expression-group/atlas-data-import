@@ -133,7 +133,7 @@ if(!is.na(opt$output_dir_name)){
         output_dir = paste(output_dir, norm_method, sep="_")
     }
 }
-dir.create(output_dir)
+dir.create(output_dir, showWarnings = FALSE)
 
 # build generic url prefix
 if(!is.na(opt$config_file)){
@@ -167,7 +167,7 @@ if(opt$decorated_rows){
 }
 expr_data = c("mtx.gz", "mtx_cols.gz", rows)
 file_names = c("matrix.mtx", "barcodes.tsv", "genes.tsv")
-dir.create(paste(output_dir, opt$exp_data_dir, sep="/"))
+dir.create(paste(output_dir, opt$exp_data_dir, sep="/"), showWarnings = FALSE)
 for(idx in seq_along(expr_data)){
     url = paste(expr_prefix, expr_data[idx], sep=".")
     if(!url.exists(url)){
