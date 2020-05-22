@@ -7,8 +7,7 @@
 
     run rm -rf output_dir_name'/*' && get_experiment_data.R\
                                         --accesssion-code $study_accession_num\
-                                        --expr-data-type $expr_data_type\
-                                        --normalisation-method $normalisation_method\
+                                        --matrix-type $matrix_type\
                                         --output-dir-name $output_dir_name\
                                         --get-sdrf\
                                         --get-condensed-sdrf\

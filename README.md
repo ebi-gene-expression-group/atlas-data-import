@@ -15,8 +15,7 @@ conda install -c ebi-gene-expression-group atlas-data-import
 get_experiment_data.R\
             --accesssion-code <accession code of the data set to be extracted>\
             --config-file <path to config file in .yaml format>\
-            --expr-data-type <type of expression data to download>\
-            --normalisation-method <normalisation method ('TPM' or 'CPM')>\
+            --matrix-type <type of expression data to download>\
             --decorated-rows <boolean; use decorated row names?>\
             --output-dir-name <name of the output directory>\
             --use-default-names <should default names be used?>\

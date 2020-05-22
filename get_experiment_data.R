@@ -25,18 +25,11 @@ option_list = list(
         help = "Config file in .yaml format"
     ),
     make_option(
-        c("-d", "--expr-data-type"),
+        c("-d", "--matrix-type"),
         action = "store",
         default = NA,
         type = 'character',
-        help = "Type of expression data to download. Must be one of 'raw', 'filtered', 'normalised'"
-    ),
-    make_option(
-        c("-n", "--normalisation-method"),
-        action = "store",
-        default = NA,
-        type = 'character',
-        help = "Normalisation method ('TPM' or 'CPM'). Needs to be specified if --expr-data-type is set to 'normalised'"
+        help = "Type of expression data to download. Must be one of 'raw', 'filtered', 'TPM' or 'CPM'"
     ),
     make_option(
         c("-c", "--decorated-rows"),
@@ -110,28 +103,20 @@ option_list = list(
     )
 )
 
-opt = wsc_parse_args(option_list, mandatory = c("accesssion_code", "expr_data_type"))
+opt = wsc_parse_args(option_list, mandatory = c("accesssion_code", "matrix_type"))
 acc = opt$accesssion_code
-data_type = toupper(opt$expr_data_type)
-norm_method = toupper(opt$normalisation_method)
+matrix_type = toupper(opt$matrix_type)
 
 # check expression data type
-if(!data_type %in% c("RAW", "FILTERED", "NORMALISED")){
-    stop(paste("Incorrect argument provided for expr-data-type:", data_type))
-}
-# check normalisation method
-if(data_type == "NORMALISED" & !norm_method %in% c("CPM", "TPM")){
-    stop(paste("Empty or incorrect argument provided for --normalisation-method parameter:", norm_method))
+if(!matrix_type %in% c("RAW", "FILTERED", "CPM", "TPM")){
+    stop(paste("Incorrect argument provided for expr-data-type:", matrix_type))
 }
 
 # build output dir path
 if(!is.na(opt$output_dir_name)){
     output_dir = opt$output_dir_name
 } else {
-    output_dir = paste(acc, data_type, sep="_")
-    if(!is.na(norm_method)){
-        output_dir = paste(output_dir, norm_method, sep="_")
-    }
+    output_dir = paste(acc, matrix_type, sep="_")
 }
 dir.create(output_dir, showWarnings = FALSE)
 
@@ -146,18 +131,18 @@ if(!is.na(opt$config_file)){
     scxa_prefix = "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments"
 }
 
+# construct download link depending on matrix type 
 url_prefix = paste(scxa_prefix, acc, acc, sep="/")
-if(data_type == "RAW"){
+if(matrix_type == "RAW"){
     expr_prefix = paste(url_prefix, "aggregated_counts", sep=".")
-} else if(data_type == "FILTERED"){
+} else if(matrix_type == "FILTERED"){
     expr_prefix = paste(url_prefix, "aggregated_filtered_counts", sep=".")
-} else if(data_type == "NORMALISED"){
-    if(norm_method == "CPM"){
-        expr_prefix = paste(url_prefix, "aggregated_filtered_normalised_counts", sep=".")
-    } else{
-        expr_prefix = paste(url_prefix, "expression_tpm", sep=".")
-    }
+} else if(matrix_type == "CPM"){
+    expr_prefix = paste(url_prefix, "aggregated_filtered_normalised_counts", sep=".")
+} else if(matrix_type == "TPM"){
+    expr_prefix = paste(url_prefix, "expression_tpm", sep=".")
 }
+
 
 # download expression data
 if(opt$decorated_rows){
@@ -170,12 +155,9 @@ file_names = c("matrix.mtx", "barcodes.tsv", "genes.tsv")
 dir.create(paste(output_dir, opt$exp_data_dir, sep="/"), showWarnings = FALSE)
 for(idx in seq_along(expr_data)){
     url = paste(expr_prefix, expr_data[idx], sep=".")
-    if(!url.exists(url)){
-        stop(paste("File", url, "does not exist"))
-    }
-    base_name = basename(url)
-    out_path = paste(output_dir, opt$exp_data_dir, base_name, sep="/")
+    out_path = paste(output_dir, opt$exp_data_dir, basename(url), sep="/")
     download.file(url=url, destfile=out_path)
+    if(!file.exists(out_path)) stop(paste("File", out_path, "failed to be downloaded"))
     # decompress files 
     if(summary(file(out_path))$class == 'gzfile'){
         gunzip(out_path, overwrite = TRUE, remove = TRUE)
@@ -205,11 +187,11 @@ names = c("sdrf.txt", "condensed-sdrf.tsv", "idf.txt", markers)
 for(idx in seq_along(non_expr_files)){
     if(non_expr_files[idx]){
         url = paste(url_prefix, names[idx], sep=".")
-        if(!url.exists(url)) stop(paste("File", url, "does not exist"))
+        i = paste(output_dir, basename(url), sep="/")
         system(paste("wget", url, "-P", output_dir))
+        if(!file.exists(i)) stop(paste("File", i, "does not exist"))
         # do not rename if multiple marker files downloaded
         if(!opt$use_full_names & !(idx==4 & multiple_markers)){
-            i = paste(output_dir, basename(url), sep="/")
             o = paste(output_dir, names[idx], sep="/")
             file.rename(i, o)
         }

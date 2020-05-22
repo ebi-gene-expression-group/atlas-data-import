@@ -40,11 +40,10 @@ fi
 ################################################################################
 # List tool outputs/ inputs
 ################################################################################
-export study_accession_num="E-ENAD-16"
-export expr_data_type="normalised"
-export normalisation_method="tpm"
-export output_dir_name=$test_dir
-export num_clusters=13
+export study_accession_num="E-ENAD-14"
+export matrix_type="cpm"
+export output_dir_name=$test_dir/$study_accession_num
+export num_clusters=24
 
 ################################################################################
 # Test individual scripts
