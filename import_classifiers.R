@@ -2,6 +2,9 @@
 
 # Import pre-trained classifiers for a provided list of datasets
 
+suppressPackageStartupMessages(require(optparse))
+suppressPackageStartupMessages(require(workflowscriptscommon))
+
 option_list = list(
     make_option(
             c("-f", "--config-file"),
@@ -28,8 +31,6 @@ option_list = list(
 
 opt = wsc_parse_args(option_list, mandatory = c("tool", "classifiers_output_dir"))
 # import dependencies
-suppressPackageStartupMessages(require(optparse))
-suppressPackageStartupMessages(require(workflowscriptscommon))
 suppressPackageStartupMessages(require(R.utils))
 suppressPackageStartupMessages(require(RCurl))
 suppressPackageStartupMessages(require(yaml))

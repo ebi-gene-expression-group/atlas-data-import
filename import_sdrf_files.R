@@ -4,6 +4,9 @@
 ### By default, SDRF files for all available datasets that have trained classifiers are obtained
 ### Alternatively, necessary datasets can be provided through a config file
 
+suppressPackageStartupMessages(require(optparse))
+suppressPackageStartupMessages(require(workflowscriptscommon))
+
 option_list = list(
     make_option(
             c("-f", "--config-file"),
@@ -21,17 +24,15 @@ option_list = list(
     ),
     make_option(
             c("-s", "--sdrf-output-dir"),
-            action = "store_true",
+            action = "store",
             default = NA,
             type = 'character',
             help = "Output path for imported SDRF files directory"
     )
 )
-opt = wsc_parse_args(option_list, mandatory = c("tool", "classifiers_output_dir"))
+opt = wsc_parse_args(option_list, mandatory = c("sdrf_output_dir"))
 
 # import dependencies 
-suppressPackageStartupMessages(require(optparse))
-suppressPackageStartupMessages(require(workflowscriptscommon))
 suppressPackageStartupMessages(require(R.utils))
 suppressPackageStartupMessages(require(RCurl))
 suppressPackageStartupMessages(require(yaml))
@@ -70,5 +71,5 @@ for(dataset in datasets){
     file_name = paste(dataset, sdrf_file, sep=".")
     prefix = paste(scxa_experiments_prefix, dataset, sep="")
     download_path = paste(prefix, file_name, sep="/")
-    download.file(download_path, destfile = paste(out_dir, file_name))
+    download.file(download_path, destfile = paste(out_dir, file_name,sep="/"))
 }
