@@ -39,9 +39,7 @@ suppressPackageStartupMessages(require(RCurl))
 if(!is.na(opt$config_file)){
     config = yaml.load_file(opt$config_file)
     datasets = toupper(config$datasets)
-    #scxa_classifiers_prefix = config$scxa_classifiers_prefix
     scxa_experiments_prefix = config$scxa_experiments_prefix
-    #if(!endsWith(scxa_classifiers_prefix, "/")) scxa_classifiers_prefix = paste(scxa_classifiers_prefix, "/", sep="")
     if(!endsWith(scxa_experiments_prefix, "/")) scxa_experiments_prefix = paste(scxa_experiments_prefix, "/", sep="")
 } else {
     scxa_experiments_prefix = "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments/"
