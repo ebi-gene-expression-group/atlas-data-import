@@ -1,7 +1,10 @@
-scxa_prefix:
-  - "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments"
-files:
-  - NA
-  - FILE2
+sdrf:
+  - "sdrf.txt"
+condensed_sdrf:
+  - "condensed-sdrf.tsv"
+scxa_classifiers_prefix:
+  - "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/classifiers/"
+scxa_experiments_prefix: 
+  - "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments/"
 
 

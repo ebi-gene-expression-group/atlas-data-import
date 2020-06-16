@@ -107,6 +107,10 @@ opt = wsc_parse_args(option_list, mandatory = c("accesssion_code", "matrix_type"
 acc = opt$accesssion_code
 matrix_type = toupper(opt$matrix_type)
 
+# source default config file
+script_dir = dirname(strsplit(commandArgs()[grep('--file=', commandArgs())], '=')[[1]][2])
+default_config = yaml.load_file(paste(script_dir, "config.yaml", sep="/"))
+
 # check expression data type
 if(!matrix_type %in% c("RAW", "FILTERED", "CPM", "TPM")){
     stop(paste("Incorrect argument provided for expr-data-type:", matrix_type))
@@ -128,7 +132,7 @@ if(!is.na(opt$config_file)){
         stop("Incorrect 'scxa_prefix' parameter provided in config file. Page does not exist")
     }
 } else {
-    scxa_prefix = "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments"
+    scxa_prefix = default_config$scxa_experiments_prefix
 }
 
 # construct download link depending on matrix type 

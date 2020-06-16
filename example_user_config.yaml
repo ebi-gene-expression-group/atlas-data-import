@@ -1,0 +1,7 @@
+datasets:
+  - "E-ENAD-14"
+  - "E-MTAB-4547"
+scxa_classifiers_prefix:
+  - "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/classifiers/"
+scxa_experiments_prefix: 
+  - "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments/"

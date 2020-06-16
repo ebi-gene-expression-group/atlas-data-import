@@ -31,11 +31,15 @@ opt = wsc_parse_args(option_list, mandatory = c("tool", "classifiers_output_dir"
 suppressPackageStartupMessages(require(optparse))
 suppressPackageStartupMessages(require(workflowscriptscommon))
 suppressPackageStartupMessages(require(R.utils))
-suppressPackageStartupMessages(require(yaml))
 suppressPackageStartupMessages(require(RCurl))
+suppressPackageStartupMessages(require(yaml))
 
 out_dir = opt$classifiers_output_dir
 tool = paste(opt$tool, "classifier.rds", sep="_")
+
+# source default config file
+script_dir = dirname(strsplit(commandArgs()[grep('--file=', commandArgs())], '=')[[1]][2])
+default_config = yaml.load_file(paste(script_dir, "config.yaml", sep="/"))
 
 # parse config file or use default values
 if(!is.na(opt$config_file)){
@@ -44,7 +48,7 @@ if(!is.na(opt$config_file)){
     scxa_classifiers_prefix = config$scxa_classifiers_prefix
     if(!endsWith(scxa_classifiers_prefix, "/")) scxa_classifiers_prefix = paste(scxa_classifiers_prefix, "/", sep="")
 } else {
-    scxa_classifiers_prefix = "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/classifiers/"
+    scxa_classifiers_prefix = default_config$scxa_classifiers_prefix
     datasets = system(paste("curl -l", scxa_classifiers_prefix), intern=TRUE)
 }
 

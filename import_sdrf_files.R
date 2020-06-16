@@ -28,30 +28,35 @@ option_list = list(
     )
 )
 opt = wsc_parse_args(option_list, mandatory = c("tool", "classifiers_output_dir"))
+
 # import dependencies 
 suppressPackageStartupMessages(require(optparse))
 suppressPackageStartupMessages(require(workflowscriptscommon))
 suppressPackageStartupMessages(require(R.utils))
-suppressPackageStartupMessages(require(yaml))
 suppressPackageStartupMessages(require(RCurl))
+suppressPackageStartupMessages(require(yaml))
 
-# parse config file or use default values
+# source default config file
+script_dir = dirname(strsplit(commandArgs()[grep('--file=', commandArgs())], '=')[[1]][2])
+default_config = yaml.load_file(paste(script_dir, "config.yaml", sep="/"))
+
+# parse user-provided config file or use default values
 if(!is.na(opt$config_file)){
     config = yaml.load_file(opt$config_file)
     datasets = toupper(config$datasets)
     scxa_experiments_prefix = config$scxa_experiments_prefix
     if(!endsWith(scxa_experiments_prefix, "/")) scxa_experiments_prefix = paste(scxa_experiments_prefix, "/", sep="")
 } else {
-    scxa_experiments_prefix = "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments/"
-    scxa_classifiers_prefix = "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/classifiers/"
+    scxa_classifiers_prefix = default_config$scxa_classifiers_prefix
+    scxa_experiments_prefix = default_config$scxa_experiments_prefix
     datasets = system(paste("curl -l", scxa_classifiers_prefix), intern=TRUE)
 }
 
 # build a link for sdrf files
 if(opt$get_condensed_sdrf){
-    sdrf_file = "condensed-sdrf.tsv"
+    sdrf_file = default_config$condensed_sdrf
 } else {
-    sdrf_file = "sdrf.txt"
+    sdrf_file = default_config$sdrf
 }
 
 # create import directory
