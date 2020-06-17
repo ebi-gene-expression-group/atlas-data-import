@@ -36,7 +36,7 @@ suppressPackageStartupMessages(require(RCurl))
 suppressPackageStartupMessages(require(yaml))
 
 out_dir = opt$classifiers_output_dir
-tool = paste(opt$tool, "classifier.rds", sep="_")
+tool = tolower(paste(opt$tool, "classifier.rds", sep="_"))
 
 # source default config file
 script_dir = dirname(strsplit(commandArgs()[grep('--file=', commandArgs())], '=')[[1]][2])
