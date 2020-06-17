@@ -45,12 +45,11 @@ default_config = yaml.load_file(paste(script_dir, "config.yaml", sep="/"))
 if(!is.na(opt$config_file)){
     config = yaml.load_file(opt$config_file)
     datasets = toupper(config$datasets)
-    scxa_experiments_prefix = config$scxa_experiments_prefix
-    if(!endsWith(scxa_experiments_prefix, "/")) scxa_experiments_prefix = paste(scxa_experiments_prefix, "/", sep="")
+    scxa_experiments_prefix = sub("/", "", config$scxa_experiments_prefix)
 } else {
     scxa_classifiers_prefix = default_config$scxa_classifiers_prefix
     scxa_experiments_prefix = default_config$scxa_experiments_prefix
-    datasets = system(paste("curl -l", scxa_classifiers_prefix), intern=TRUE)
+    datasets = system(paste("curl -l ", scxa_classifiers_prefix, "/", sep=""), intern=TRUE)
 }
 
 # build a link for sdrf files
@@ -69,7 +68,7 @@ if(!dir.exists(out_dir)){
 # for each dataset, retrieve corresponding sdrf file
 for(dataset in datasets){
     file_name = paste(dataset, sdrf_file, sep=".")
-    prefix = paste(scxa_experiments_prefix, dataset, sep="")
+    prefix = paste(scxa_experiments_prefix, dataset, sep="/")
     download_path = paste(prefix, file_name, sep="/")
     download.file(download_path, destfile = paste(out_dir, file_name,sep="/"))
 }

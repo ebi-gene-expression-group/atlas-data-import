@@ -25,6 +25,7 @@
     fi
 
     run rm -rf $classifiers_output_dir && import_classifiers.R\
+                                            --config-file $user_config_file\
                                             --tool $tool\
                                             --classifiers-output-dir $classifiers_output_dir
 
@@ -39,8 +40,9 @@
     fi
 
     run rm -rf $sdrf_output_dir && import_sdrf_files.R\
+                        --config-file $user_config_file\
                         --get-condensed-sdrf $condensed_sdrfs\
-                        --sdrf-output-dir
+                        --sdrf-output-dir $sdrf_output_dir
 
     echo "status = ${status}"
     echo "output = ${output}"

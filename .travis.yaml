@@ -31,4 +31,4 @@ install:
 before_script:
   - export PATH=`pwd`:$PATH
 
-script: scpred_post_install_tests.sh
+script: data_import_post_install_tests.sh

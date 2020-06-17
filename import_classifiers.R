@@ -36,7 +36,7 @@ suppressPackageStartupMessages(require(RCurl))
 suppressPackageStartupMessages(require(yaml))
 
 out_dir = opt$classifiers_output_dir
-tool = tolower(paste(opt$tool, "classifier.rds", sep="_"))
+tool = tolower(paste(opt$tool, "rds", sep="."))
 
 # source default config file
 script_dir = dirname(strsplit(commandArgs()[grep('--file=', commandArgs())], '=')[[1]][2])
@@ -46,11 +46,10 @@ default_config = yaml.load_file(paste(script_dir, "config.yaml", sep="/"))
 if(!is.na(opt$config_file)){
     config = yaml.load_file(opt$config_file)
     datasets = toupper(config$datasets)
-    scxa_classifiers_prefix = config$scxa_classifiers_prefix
-    if(!endsWith(scxa_classifiers_prefix, "/")) scxa_classifiers_prefix = paste(scxa_classifiers_prefix, "/", sep="")
+    scxa_classifiers_prefix = sub("/$", "", config$scxa_classifiers_prefix)
 } else {
     scxa_classifiers_prefix = default_config$scxa_classifiers_prefix
-    datasets = system(paste("curl -l", scxa_classifiers_prefix), intern=TRUE)
+    datasets = system(paste("curl -l ", scxa_classifiers_prefix, "/", sep=""), intern=TRUE)
 }
 
 # create import directory
