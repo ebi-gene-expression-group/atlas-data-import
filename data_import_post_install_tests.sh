@@ -44,6 +44,10 @@ export study_accession_num="E-ENAD-14"
 export matrix_type="cpm"
 export output_dir_name=$test_dir/$study_accession_num
 export num_clusters=24
+export classifiers_output_dir=$test_dir/"imported_classifiers"
+export tool="scmap-cell"
+export condensed_sdrfs="TRUE"
+export sdrf_output_dir=$test_dir/"sdrf_files"
 
 ################################################################################
 # Test individual scripts
