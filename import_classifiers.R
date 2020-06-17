@@ -1,0 +1,65 @@
+#!/usr/bin/env Rscript 
+
+# Import pre-trained classifiers for a provided list of datasets
+
+suppressPackageStartupMessages(require(optparse))
+suppressPackageStartupMessages(require(workflowscriptscommon))
+
+option_list = list(
+    make_option(
+            c("-f", "--config-file"),
+            action = "store",
+            default = NA,
+            type = 'character',
+            help = "Config file in .yaml format"
+        ),
+    make_option(
+            c("-t", "--tool"),
+            action = "store",
+            default = NA,
+            type = 'character',
+            help = "Which tool's classifiers should be imported?"
+        ),
+    make_option(
+            c("-c", "--classifiers-output-dir"),
+            action = "store_true",
+            default = NA,
+            type = 'character',
+            help = "Path for directory storing imported classifiers"
+    )
+)
+
+opt = wsc_parse_args(option_list, mandatory = c("tool", "classifiers_output_dir"))
+# import dependencies
+suppressPackageStartupMessages(require(R.utils))
+suppressPackageStartupMessages(require(RCurl))
+suppressPackageStartupMessages(require(yaml))
+
+out_dir = opt$classifiers_output_dir
+tool = tolower(paste(opt$tool, "rds", sep="."))
+
+# source default config file
+script_dir = dirname(strsplit(commandArgs()[grep('--file=', commandArgs())], '=')[[1]][2])
+default_config = yaml.load_file(paste(script_dir, "config.yaml", sep="/"))
+
+# parse config file or use default values
+if(!is.na(opt$config_file)){
+    config = yaml.load_file(opt$config_file)
+    datasets = toupper(config$datasets)
+    scxa_classifiers_prefix = sub("/$", "", config$scxa_classifiers_prefix)
+} else {
+    scxa_classifiers_prefix = default_config$scxa_classifiers_prefix
+    datasets = system(paste("curl -l ", scxa_classifiers_prefix, "/", sep=""), intern=TRUE)
+}
+
+# create import directory
+if(!dir.exists(out_dir)){
+    dir.create(out_dir)
+}
+
+# download classifiers from specified datasets
+for(dataset in datasets){
+    out_file = paste(dataset, tool, sep="_")
+    link = paste(scxa_classifiers_prefix, dataset, out_file, sep="/")
+    download.file(link, destfile=paste(out_dir, out_file, sep="/"))
+}
