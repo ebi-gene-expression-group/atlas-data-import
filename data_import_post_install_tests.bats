@@ -12,6 +12,7 @@
                                         --get-sdrf\
                                         --get-condensed-sdrf\
                                         --get-idf\
+                                        --get-exp-design\
                                         --get-marker-genes\
                                         --number-of-clusters $num_clusters
      echo "status = ${status}"

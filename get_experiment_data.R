@@ -81,6 +81,13 @@ option_list = list(
         help = "Should IDF file(s) be downloaded? Default: FALSE"
     ),
     make_option(
+        c("-z", "--get-exp-design"),
+        action = "store_true",
+        default = FALSE,
+        type = 'logical',
+        help = "Should experimental design file be downloaded? Default: FALSE"
+    ),
+    make_option(
         c("-r", "--get-marker-genes"),
         action = "store_true",
         default = FALSE,
@@ -176,7 +183,7 @@ for(idx in seq_along(expr_data)){
 }
 
 # download metadata & marker files, if specified
-non_expr_files = c(opt$get_sdrf, opt$get_condensed_sdrf, opt$get_idf, opt$get_marker_genes)
+non_expr_files = c(opt$get_sdrf, opt$get_condensed_sdrf, opt$get_idf, opt$get_marker_genes, opt$get_exp_design)
 
 # build file names 
 if(opt$get_marker_genes & !is.na(opt$number_of_clusters)){
@@ -187,17 +194,24 @@ if(opt$get_marker_genes & !is.na(opt$number_of_clusters)){
     multiple_markers = TRUE
 }
 
-names = c("sdrf.txt", "condensed-sdrf.tsv", "idf.txt", markers) 
+names = c("sdrf.txt", "condensed-sdrf.tsv", "idf.txt", markers, paste("'https://www.ebi.ac.uk/gxa/sc/experiment", acc, "download?fileType=experiment-design&accessKey='",sep="/"))
 for(idx in seq_along(non_expr_files)){
-    if(non_expr_files[idx]){
-        url = paste(url_prefix, names[idx], sep=".")
-        i = paste(output_dir, basename(url), sep="/")
-        system(paste("wget", url, "-P", output_dir))
-        if(!file.exists(i)) stop(paste("File", i, "does not exist"))
-        # do not rename if multiple marker files downloaded
-        if(!opt$use_full_names & !(idx==4 & multiple_markers)){
-            o = paste(output_dir, names[idx], sep="/")
-            file.rename(i, o)
+    metadata_file = non_expr_files[idx]
+    if(metadata_file){
+        if(idx == 5){
+            url = names[idx]
+            system(paste("wget", url, "-P", output_dir))
+            file.rename(paste(output_dir, "download?fileType=experiment-design&accessKey=",sep="/"), paste(output_dir, "exp_design.tsv",sep="/"))
+        }else{
+            url = paste(url_prefix, names[idx], sep=".")
+            i = paste(output_dir, basename(url), sep="/")
+            system(paste("wget", url, "-P", output_dir))
+            if(!file.exists(i)) stop(paste("File", i, "does not exist"))
+            # do not rename if multiple marker files downloaded
+            if(!opt$use_full_names & !(idx==4 & multiple_markers)){
+                o = paste(output_dir, names[idx], sep="/")
+                file.rename(i, o)
+            }
         }
     }
 }
