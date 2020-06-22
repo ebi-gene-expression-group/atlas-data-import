@@ -194,14 +194,18 @@ if(opt$get_marker_genes & !is.na(opt$number_of_clusters)){
     multiple_markers = TRUE
 }
 
-names = c("sdrf.txt", "condensed-sdrf.tsv", "idf.txt", markers, paste("'https://www.ebi.ac.uk/gxa/sc/experiment", acc, "download?fileType=experiment-design&accessKey='",sep="/"))
+names = c("sdrf.txt", "condensed-sdrf.tsv", "idf.txt", markers, 
+          paste("'https://www.ebi.ac.uk/gxa/sc/experiment", acc, 
+          "download?fileType=experiment-design&accessKey='",sep="/"))
+
 for(idx in seq_along(non_expr_files)){
     metadata_file = non_expr_files[idx]
     if(metadata_file){
         if(idx == 5){
             url = names[idx]
             system(paste("wget", url, "-P", output_dir))
-            file.rename(paste(output_dir, "download?fileType=experiment-design&accessKey=",sep="/"), paste(output_dir, "exp_design.tsv",sep="/"))
+            file.rename(paste(output_dir, "download?fileType=experiment-design&accessKey=",sep="/"),
+                        paste(output_dir, "exp_design.tsv",sep="/"))
         }else{
             url = paste(url_prefix, names[idx], sep=".")
             i = paste(output_dir, basename(url), sep="/")
