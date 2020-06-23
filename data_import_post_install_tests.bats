@@ -28,7 +28,10 @@
     run rm -rf $classifiers_output_dir && import_classifiers.R\
                                             --config-file $user_config_file\
                                             --tool $tool\
-                                            --classifiers-output-dir $classifiers_output_dir
+                                            --classifiers-output-dir $classifiers_output_dir\
+                                            --get-sdrf\
+                                            --condensed-sdrf\
+                                            --sdrf-output-dir $sdrf_output_dir 
 
     echo "status = ${status}"
     echo "output = ${output}"
@@ -36,6 +39,7 @@
 }
 
 @test "import SDRF files" {
+    skip
     if [ "$use_existing_outputs" = 'true' ]; then
         skip "use_existing_outputs is set to 'true'"
     fi
