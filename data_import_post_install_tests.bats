@@ -25,29 +25,13 @@
         skip "use_existing_outputs is set to 'true'"
     fi
 
-    run rm -rf $classifiers_output_dir && import_classifiers.R\
+    run rm -rf $classifiers_output_dir && import_classification_data.R\
                                             --config-file $user_config_file\
                                             --tool $tool\
                                             --classifiers-output-dir $classifiers_output_dir\
                                             --get-sdrf\
                                             --condensed-sdrf\
                                             --sdrf-output-dir $sdrf_output_dir 
-
-    echo "status = ${status}"
-    echo "output = ${output}"
-    [ "$status" -eq 0 ]
-}
-
-@test "import SDRF files" {
-    skip
-    if [ "$use_existing_outputs" = 'true' ]; then
-        skip "use_existing_outputs is set to 'true'"
-    fi
-
-    run rm -rf $sdrf_output_dir && import_sdrf_files.R\
-                        --config-file $user_config_file\
-                        --get-condensed-sdrf $condensed_sdrfs\
-                        --sdrf-output-dir $sdrf_output_dir
 
     echo "status = ${status}"
     echo "output = ${output}"
