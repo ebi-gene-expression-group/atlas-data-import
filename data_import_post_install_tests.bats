@@ -20,7 +20,7 @@
      [ "$status" -eq 0 ]
 }
 
-@test "download classifiers" {
+@test "import classification data" {
     if [ "$use_existing_outputs" = 'true' ]; then
         skip "use_existing_outputs is set to 'true'"
     fi
@@ -31,6 +31,8 @@
                                             --classifiers-output-dir $classifiers_output_dir\
                                             --get-sdrf\
                                             --condensed-sdrf\
+                                            --get-tool-perf-table\
+                                            --tool-perf-table-output-path $tool_perf_table_output_path\
                                             --sdrf-output-dir $sdrf_output_dir 
 
     echo "status = ${status}"

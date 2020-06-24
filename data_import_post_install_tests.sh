@@ -49,6 +49,7 @@ export tool="scmap-cell"
 export condensed_sdrfs="TRUE"
 export sdrf_output_dir=$test_dir/"sdrf_files"
 export user_config_file="example_user_config.yaml"
+export tool_perf_table_output_path=$test_dir/"tool_perf_pvals.tsv"
 
 ################################################################################
 # Test individual scripts

@@ -47,6 +47,20 @@ option_list = list(
             default = "imported_SDRFs",
             type = 'character',
             help = "Output path for imported SDRF files directory"
+    ),
+    make_option(
+            c("-p", "--get-tool-perf-table"),
+            action = "store_true",
+            default = FALSE,
+            type = 'logical',
+            help = "Should the tool performance table be imported? Default: FALSE"
+    ), 
+    make_option(
+            c("-m", "--tool-perf-table-output-path"),
+            action = "store",
+            default = "tool_perf_pvals.tsv",
+            type = 'character',
+            help = "Output path for imported SDRF files directory"
     )
 )
 
@@ -67,11 +81,13 @@ default_config = yaml.load_file(paste(script_dir, "config.yaml", sep="/"))
 if(!is.na(opt$config_file)){
     config = yaml.load_file(opt$config_file)
     datasets = toupper(config$datasets)
+    tool_perf_table = config$tool_perf_table
     scxa_classifiers_prefix = sub("/$", "", config$scxa_classifiers_prefix)
     scxa_experiments_prefix = sub("/$", "", config$scxa_experiments_prefix)
 } else {
     scxa_classifiers_prefix = default_config$scxa_classifiers_prefix
     scxa_experiments_prefix = default_config$scxa_experiments_prefix
+    tool_perf_table = default_config$tool_perf_table
     datasets = system(paste("curl -l ", scxa_classifiers_prefix, "/", sep=""), intern=TRUE)
 }
 
@@ -109,3 +125,7 @@ if(opt$get_sdrf){
     }
 }
 
+# import tool performance table, if specified
+if(opt$get_tool_perf_table){
+    download.file(tool_perf_table, destfile=opt$tool_perf_table_output_path)
+}
