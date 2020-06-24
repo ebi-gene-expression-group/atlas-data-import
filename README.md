@@ -32,19 +32,11 @@ get_experiment_data.R\
 ### Import pre-trained classifiers for a range of studies
 User can provide a yaml-formatted config file (see [example](example_user_config.yaml)) with specific datasets for which to import classifiers. Otherwise, all available classifiers of a given type are imported. 
 ```
-import_classifiers.R\
+import_classification_data.R\
             --config-file <path to user-provided config file>\
-            --tool <for which tool should the classifiers be imported>/
-            --classifiers-output-dir <output directory for downloaded classifiers>
+            --tool <for which tool should the classifiers be imported>\
+            --classifiers-output-dir <output directory for downloaded classifiers>\
+            --get-sdrf <should SDRF file(s) be downloaded?>\
+            --condensed-sdrf <if --get-sdrf is set to TRUE, import condensed SDRF? by default, a normal version is imported>\
+            --sdrf-output-dir <output path for imported SDRF files directory>
 ```
-### Import SDRF files for a range of studies
-```
-import_sdrf_files.R\
-            --config-file <path to user-provided config file>\
-            --get-condensed-sdrf <should condensed sdrf files be imported?>\
-            --sdrf-output-dir <path to the output directory>
-```
-
-
-
-
