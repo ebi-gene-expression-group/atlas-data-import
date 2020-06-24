@@ -38,5 +38,7 @@ import_classification_data.R\
             --classifiers-output-dir <output directory for downloaded classifiers>\
             --get-sdrf <should SDRF file(s) be downloaded?>\
             --condensed-sdrf <if --get-sdrf is set to TRUE, import condensed SDRF? by default, a normal version is imported>\
-            --sdrf-output-dir <output path for imported SDRF files directory>
+            --sdrf-output-dir <output path for imported SDRF files directory>\
+            --get-tool-perf-table <should tool performance table be imported?>\
+            --tool-perf-table-output-path <output path for tool performance table>
 ```
