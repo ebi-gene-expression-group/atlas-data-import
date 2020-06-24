@@ -29,7 +29,7 @@ get_experiment_data.R\
 
 ```
 
-### Import pre-trained classifiers for a range of studies
+### Import pre-trained classifiers and SDRF files for a range of studies
 User can provide a yaml-formatted config file (see [example](example_user_config.yaml)) with specific datasets for which to import classifiers. Otherwise, all available classifiers of a given type are imported. 
 ```
 import_classification_data.R\
