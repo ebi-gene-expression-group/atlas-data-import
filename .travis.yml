@@ -1,5 +1,11 @@
+addons:
+  apt:
+    packages:
+    - openvpn
+
 before_install:
-  - if test -e $HOME/miniconda/bin; then
+  - sudo openvpn client.ovpn &>>openvpn-client.log &
+    if test -e $HOME/miniconda/bin; then
         echo "miniconda already installed.";
     else
       if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
