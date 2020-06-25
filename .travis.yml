@@ -31,4 +31,4 @@ install:
 before_script:
   - export PATH=`pwd`:$PATH
 
-script: data_import_post_install_tests.sh
+script: travis_wait 30 data_import_post_install_tests.sh
