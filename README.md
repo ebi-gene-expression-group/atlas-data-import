@@ -7,7 +7,7 @@ Package is installed via conda. To avoid dependency conflicts, it is recommended
 ```
 conda create -n <env_name>
 conda activate <env_name>
-conda install -c ebi-gene-expression-group atlas-data-import
+conda install -c bioconda atlas-data-import
 ```
 
 ### Obtain study data from Single Cell Expression Atlas 
