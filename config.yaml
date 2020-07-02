@@ -7,4 +7,4 @@ scxa_classifiers_prefix:
 scxa_experiments_prefix: 
   - "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments"
 tool_perf_table:
-  - "ftps://www.ebi.ac.uk/~a_solovyev/prod_testing_data/tool_perf_pvals.tsv"
+  - "https://www.ebi.ac.uk/~a_solovyev/prod_testing_data/tool_perf_pvals.tsv"
