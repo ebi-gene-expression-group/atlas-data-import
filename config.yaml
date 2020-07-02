@@ -3,8 +3,8 @@ sdrf:
 condensed_sdrf:
   - "condensed-sdrf.tsv"
 scxa_classifiers_prefix:
-  - "http://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments_classifiers"
+  - "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments_classifiers"
 scxa_experiments_prefix: 
-  - "http://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments"
+  - "ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments"
 tool_perf_table:
-  - "https://www.ebi.ac.uk/~a_solovyev/prod_testing_data/tool_perf_pvals.tsv"
+  - "ftps://www.ebi.ac.uk/~a_solovyev/prod_testing_data/tool_perf_pvals.tsv"
