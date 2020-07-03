@@ -8,6 +8,7 @@
     run rm -rf $output_dir_name'/*' && get_experiment_data.R\
                                         --accesssion-code $study_accession_num\
                                         --matrix-type $matrix_type\
+                                        --config-file $user_config_file\
                                         --output-dir-name $output_dir_name\
                                         --get-sdrf\
                                         --get-condensed-sdrf\
