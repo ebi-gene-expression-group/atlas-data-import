@@ -135,9 +135,6 @@ dir.create(output_dir, showWarnings = FALSE)
 if(!is.na(opt$config_file)){
     config = yaml.load_file(opt$config_file)
     scxa_prefix = config$scxa_experiments_prefix
-    if(!url.exists(scxa_prefix)){
-        stop("Incorrect 'scxa_prefix' parameter provided in config file. Page does not exist")
-    }
 } else {
     scxa_prefix = default_config$scxa_experiments_prefix
 }
