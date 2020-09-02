@@ -43,7 +43,7 @@ fi
 export study_accession_num="E-ENAD-14"
 export matrix_type="cpm"
 export output_dir_name=$test_dir/$study_accession_num
-export num_clusters=24
+export num_clusters=22
 export classifiers_output_dir=$test_dir/"imported_classifiers"
 export tool="scmap-cell"
 export condensed_sdrfs="TRUE"
