@@ -151,6 +151,26 @@ if(matrix_type == "RAW"){
     expr_prefix = paste(url_prefix, "expression_tpm", sep=".")
 }
 
+# Wrap download.file for retries and error checking
+download.file.with.retries <- function(link, dest, sleep_time=5, max_retries=5){
+    stat <- 1
+    retries <- 0
+
+    print(paste("Downloading", link))
+    while( stat != 0 && retries < max_retries){
+        if (retries > 0){
+            Sys.sleep(sleep_time)
+        }    
+        stat <- download.file(link, destfile=dest)
+        retries <- retries + 1
+    }
+
+    if (stat != 0){
+        write(paste("Unable to download", link, 'after', max_retries, 'retries'), stderr())
+        quit(status=1)
+    }
+    print("... success")
+}
 
 # download expression data
 if(opt$decorated_rows){
@@ -164,7 +184,7 @@ dir.create(paste(output_dir, opt$exp_data_dir, sep="/"), showWarnings = FALSE)
 for(idx in seq_along(expr_data)){
     url = paste(expr_prefix, expr_data[idx], sep=".")
     out_path = paste(output_dir, opt$exp_data_dir, basename(url), sep="/")
-    download.file(url=url, destfile=out_path)
+    download.file.with.retries(url, dest=out_path)
     if(!file.exists(out_path)) stop(paste("File", out_path, "failed to be downloaded"))
     # decompress files 
     if(summary(file(out_path))$class == 'gzfile'){

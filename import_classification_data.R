@@ -96,11 +96,32 @@ if(!dir.exists(classifier_out_dir)){
     dir.create(classifier_out_dir)
 }
 
+# Wrap download.file for retries and error checking
+download.file.with.retries <- function(link, dest, sleep_time=5, max_retries=5){
+    stat <- 1
+    retries <- 0
+
+    print(paste("Downloading", link))
+    while( stat != 0 && retries < max_retries){
+        if (retries > 0){
+            Sys.sleep(sleep_time)
+        }    
+        stat <- download.file(link, destfile=dest)
+        retries <- retries + 1
+    }
+
+    if (stat != 0){
+        write(paste("Unable to download", link, 'after', max_retries, 'retries'), stderr())
+        quit(status=1)
+    }
+    print("... success")
+}
+
 # download classifiers from specified datasets
 for(dataset in datasets){
     out_file = paste(dataset, tool, sep="_")
     link = paste(scxa_classifiers_prefix, dataset, out_file, sep="/")
-    download.file(link, destfile=paste(classifier_out_dir, out_file, sep="/"))
+    download.file.with.retries(link, dest=paste(classifier_out_dir, out_file, sep="/"))
 }
 
 # import SDRF files, if specified
@@ -121,11 +142,11 @@ if(opt$get_sdrf){
         file_name = paste(dataset, sdrf_file, sep=".")
         prefix = paste(scxa_experiments_prefix, dataset, sep="/")
         download_path = paste(prefix, file_name, sep="/")
-        download.file(download_path, destfile = paste(sdrf_out_dir, file_name,sep="/"))
+        download.file.with.retries(download_path, dest = paste(sdrf_out_dir, file_name,sep="/"))
     }
 }
 
 # import tool performance table, if specified
 if(opt$get_tool_perf_table){
-    download.file(tool_perf_table, destfile=opt$tool_perf_table_output_path)
+    download.file(tool_perf_table, dest=opt$tool_perf_table_output_path)
 }
