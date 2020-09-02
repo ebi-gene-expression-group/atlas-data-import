@@ -153,12 +153,13 @@ if(matrix_type == "RAW"){
 
 # Wrap download.file for retries and error checking
 download.file.with.retries <- function(link, dest, sleep_time=5, max_retries=5){
-    Sys.sleep(sleep_time)    
-    
     stat <- 1
     retries <- 0
 
     while( stat != 0 && retries < max_retries){
+        if (retries > 0){
+            Sys.sleep(sleep_time)
+        }    
         stat <- download.file(link, destfile=dest)
         retries <- retries + 1
     }
