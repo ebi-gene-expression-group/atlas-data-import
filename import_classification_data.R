@@ -101,6 +101,7 @@ download.file.with.retries <- function(link, dest, sleep_time=5, max_retries=5){
     stat <- 1
     retries <- 0
 
+    print(paste("Downloading", link))
     while( stat != 0 && retries < max_retries){
         if (retries > 0){
             Sys.sleep(sleep_time)
@@ -113,6 +114,7 @@ download.file.with.retries <- function(link, dest, sleep_time=5, max_retries=5){
         write(paste("Unable to download", link, 'after', max_retries, 'retries'), stderr())
         quit(status=1)
     }
+    print("... success")
 }
 
 # download classifiers from specified datasets
