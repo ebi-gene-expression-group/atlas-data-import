@@ -1,4 +1,4 @@
-name: Test Seurat workflow with CLI scripts
+name: Test atlas-data-import scripts 
 
 on: [pull_request]
 
@@ -22,12 +22,12 @@ jobs:
       - name: Cache conda
         uses: actions/cache@v1
         env:
-        # Increase this value to reset cache if etc/example-environment.yml has not changed
-        CACHE_NUMBER: 0
-        with:
-        path: ~/conda_pkgs_dir
-        key:
-          ${{ matrix.os }}-conda-${{ env.CACHE_NUMBER }}-${{hashFiles('test-environment.yml') }}
+          # Increase this value to reset cache if etc/example-environment.yml has not changed
+          CACHE_NUMBER: 0
+          with:
+            path: ~/conda_pkgs_dir
+            key:
+              ${{ matrix.os }}-conda-${{ env.CACHE_NUMBER }}-${{hashFiles('test-environment.yml') }}
       - uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: test
