@@ -111,7 +111,7 @@ download.file.with.retries <- function(link, dest, sleep_time=5, max_retries=5){
         if (retries > 0){
             Sys.sleep(sleep_time)
         }    
-        stat <- download.file(link, destfile=dest)
+        stat <- download.file(link, destfile=dest, timeout=3600)
         retries <- retries + 1
     }
 
