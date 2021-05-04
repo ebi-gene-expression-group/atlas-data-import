@@ -24,10 +24,10 @@ jobs:
         env:
           # Increase this value to reset cache if etc/example-environment.yml has not changed
           CACHE_NUMBER: 0
-          with:
-            path: ~/conda_pkgs_dir
-            key:
-              ${{ matrix.os }}-conda-${{ env.CACHE_NUMBER }}-${{hashFiles('test-environment.yml') }}
+        with:
+          path: ~/conda_pkgs_dir
+          key:
+            ${{ matrix.os }}-conda-${{ env.CACHE_NUMBER }}-${{hashFiles('test-environment.yml') }}
       - uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: test
