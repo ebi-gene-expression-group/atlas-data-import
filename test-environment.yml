@@ -1,0 +1,10 @@
+name: test
+dependencies:
+  - bats 
+  - r-optparse 
+  - r-workflowscriptscommon
+  - r-base  
+  - r-cairo 
+  - r-r.utils 
+  - r-yaml 
+  - r-rcurl

@@ -101,12 +101,17 @@ download.file.with.retries <- function(link, dest, sleep_time=5, max_retries=5){
     stat <- 1
     retries <- 0
 
+    if(!url.exists(link)){
+        print(paste("File ", link, " does not exist. Skipping to next file." ))
+        return()
+    }
+
     print(paste("Downloading", link))
     while( stat != 0 && retries < max_retries){
         if (retries > 0){
             Sys.sleep(sleep_time)
         }    
-        stat <- download.file(link, destfile=dest)
+        stat <- download.file(link, destfile=dest, timeout=3600)
         retries <- retries + 1
     }
 

@@ -3,8 +3,8 @@ sdrf:
 condensed_sdrf:
   - "condensed-sdrf.tsv"
 datasets:
-  - "E-ENAD-27"
-  - "E-GEOD-81608"
+  - "E-GEOD-DUMMY"
+  - "E-MTAB-7249"
 scxa_classifiers_prefix:
   - "http://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments_classifiers"
 scxa_experiments_prefix: 
