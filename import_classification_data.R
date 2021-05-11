@@ -7,12 +7,14 @@ suppressPackageStartupMessages(require(workflowscriptscommon))
 
 option_list = list(
     make_option(
-            c("-f", "--config-file"),
+            c("-a", "--accession-code"),
             action = "store",
             default = NA,
             type = 'character',
-            help = "Config file in .yaml format"
-        ),
+            help = "One or more dataset accession codes of the data set for which 
+                    to download the classifiers. By default, all classifiers are downloaded 
+                    for a given dataset."
+    ),
     make_option(
             c("-t", "--tool"),
             action = "store",
@@ -56,40 +58,46 @@ option_list = list(
             help = "Should the tool performance table be imported? Default: FALSE"
     ), 
     make_option(
-            c("-m", "--tool-perf-table-output-path"),
+            c("--tool-perf-table-url"),
             action = "store",
-            default = "tool_perf_pvals.tsv",
+            default = "https://www.ebi.ac.uk/~a_solovyev/prod_testing_data/tool_perf_pvals.tsv",
             type = 'character',
-            help = "Output path for imported SDRF files directory"
+            help = "URL for import of tool performance table"
+    ), 
+    make_option(
+            c("--classifiers-prefix"),
+            action = "store",
+            default = "http://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments_classifiers",
+            type = 'character',
+            help = "URL prefix for imported classifiers."
+    ),
+    make_option(
+            c("--experiments-prefix"),
+            action = "store",
+            default = "http://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/sc_experiments",
+            type = 'character',
+            help = "URL prefix for imported experiment data."
     )
 )
 
 opt = wsc_parse_args(option_list, mandatory = c("tool"))
-# import dependencies
 suppressPackageStartupMessages(require(R.utils))
 suppressPackageStartupMessages(require(RCurl))
-suppressPackageStartupMessages(require(yaml))
+
+tool_perf_table = opt$tool_perf_table_url
+scxa_classifiers_prefix = sub("/$", "", opt$classifiers_prefix)
+scxa_experiments_prefix = sub("/$", "", opt$experiments_prefix)
+
+if(!is.na(opt$accession_code)){
+    datasets = toupper(wsc_split_string(opt$accession_code))
+} else {
+    # by default, import all available classifiers
+    scxa_classifiers_prefix_ftp = sub("http", "ftp", scxa_classifiers_prefix)
+    datasets = system(paste("curl -l ", scxa_classifiers_prefix_ftp, "/", sep=""), intern=TRUE)
+}
 
 classifier_out_dir = opt$classifiers_output_dir
-tool = tolower(paste(opt$tool, "rds", sep="."))
-
-# source default config file
-script_dir = dirname(strsplit(commandArgs()[grep('--file=', commandArgs())], '=')[[1]][2])
-default_config = yaml.load_file(paste(script_dir, "config.yaml", sep="/"))
-
-# parse config file or use default values
-if(!is.na(opt$config_file)){
-    config = yaml.load_file(opt$config_file)
-    datasets = toupper(config$datasets)
-    tool_perf_table = config$tool_perf_table
-    scxa_classifiers_prefix = sub("/$", "", config$scxa_classifiers_prefix)
-    scxa_experiments_prefix = sub("/$", "", config$scxa_experiments_prefix)
-} else {
-    scxa_classifiers_prefix = default_config$scxa_classifiers_prefix
-    scxa_experiments_prefix = default_config$scxa_experiments_prefix
-    tool_perf_table = default_config$tool_perf_table
-    datasets = system(paste("curl -l ", scxa_classifiers_prefix, "/", sep=""), intern=TRUE)
-}
+tool_file = tolower(paste(opt$tool, "rds", sep="."))
 
 # create import directory
 if(!dir.exists(classifier_out_dir)){
@@ -97,24 +105,28 @@ if(!dir.exists(classifier_out_dir)){
 }
 
 # Wrap download.file for retries and error checking
-download.file.with.retries <- function(link, dest, sleep_time=5, max_retries=5){
+download.file.with.retries <- function(link, dest, sleep_time=30, max_retries=5){
     stat <- 1
     retries <- 0
-
     if(!url.exists(link)){
         print(paste("File ", link, " does not exist. Skipping to next file." ))
         return()
     }
-
     print(paste("Downloading", link))
     while( stat != 0 && retries < max_retries){
         if (retries > 0){
             Sys.sleep(sleep_time)
-        }    
-        stat <- download.file(link, destfile=dest, timeout=3600)
+        } 
+        tryCatch({
+            stat <- download.file(link, destfile=dest, timeout=3600)
+            },
+            error = function(cond){
+                print(cond)
+                print("Download attempt failed. Retrying...")
+            }
+            )   
         retries <- retries + 1
     }
-
     if (stat != 0){
         write(paste("Unable to download", link, 'after', max_retries, 'retries'), stderr())
         quit(status=1)
@@ -124,7 +136,8 @@ download.file.with.retries <- function(link, dest, sleep_time=5, max_retries=5){
 
 # download classifiers from specified datasets
 for(dataset in datasets){
-    out_file = paste(dataset, tool, sep="_")
+    print(paste("Downloading classifier for tool", opt$tool, "trained on dataset:", dataset))
+    out_file = paste(dataset, tool_file, sep="_")
     link = paste(scxa_classifiers_prefix, dataset, out_file, sep="/")
     download.file.with.retries(link, dest=paste(classifier_out_dir, out_file, sep="/"))
 }
@@ -133,9 +146,9 @@ for(dataset in datasets){
 if(opt$get_sdrf){
     # build a link for sdrf files
     if(opt$condensed_sdrf){
-        sdrf_file = default_config$condensed_sdrf
+        sdrf_file = "condensed-sdrf.tsv"
     } else {
-        sdrf_file = default_config$sdrf
+        sdrf_file = "sdrf.tsv"
     }
     # create import directory
     sdrf_out_dir = opt$sdrf_output_dir
@@ -153,5 +166,5 @@ if(opt$get_sdrf){
 
 # import tool performance table, if specified
 if(opt$get_tool_perf_table){
-    download.file(tool_perf_table, dest=opt$tool_perf_table_output_path)
+    download.file.with.retries(tool_perf_table, dest=basename(opt$tool_perf_table))
 }
