@@ -107,6 +107,7 @@ if(!dir.exists(classifier_out_dir)){
 # Wrap download.file for retries and error checking
 download.file.with.retries <- function(link, dest, sleep_time=10, max_retries=5){
     retries <- 0
+    url_exists = FALSE
     # allow for possible network problems when checking url 
     while( !url_exists && retries < max_retries){
         if (retries > 0){
