@@ -13,8 +13,8 @@ conda install -c bioconda atlas-data-import
 ### Obtain study data from Single Cell Expression Atlas 
 ```
 get_experiment_data.R\
-            --accesssion-code <accession code of the data set to be extracted>\
-            --config-file <path to config file in .yaml format>\
+            --accesssion-code <accession code of the dataset to be extracted>\
+            --get-expression-data <should expression data be imported?>\
             --matrix-type <type of expression data to download>\
             --decorated-rows <boolean; use decorated row names?>\
             --output-dir-name <name of the output directory>\
@@ -25,7 +25,8 @@ get_experiment_data.R\
             --get-idf <boolean; should IDF files be imported?>\
             --get-marker-genes <boolean; should marker genes be imported?>\
             --number-of-clusters <number of clusters for marker gene file>\
-            --use-full-names <should non-expression data files be named with full file names? Default: FALSE>
+            --use-full-names <should non-expression data files be named with full file names? Default: FALSE>\
+            --experiments-prefix <URL prefix for scxa experiments>
 
 ```
 
@@ -33,8 +34,8 @@ get_experiment_data.R\
 User can provide a yaml-formatted config file (see [example](example_user_config.yaml)) with specific datasets for which to import classifiers. Otherwise, all available classifiers of a given type are imported. 
 ```
 import_classification_data.R\
-            --config-file <path to user-provided config file>\
-            --tool <for which tool should the classifiers be imported>\
+            --accesssion-code <comma-separated string of datasets for which to extract the classifiers>\
+            --tool <which tool's classifiers should be imported>\
             --classifiers-output-dir <output directory for downloaded classifiers>\
             --get-sdrf <should SDRF file(s) be downloaded?>\
             --condensed-sdrf <if --get-sdrf is set to TRUE, import condensed SDRF? by default, a normal version is imported>\
