@@ -216,7 +216,7 @@ non_expr_files = c("sdrf"=opt$get_sdrf, "cond_sdrf"=opt$get_condensed_sdrf,
                 "exp_design"=opt$get_exp_design)
 
 # build file names array
-markers = paste("marker_genes_", opt$number_of_clusters, ".tsv", sep="")
+markers = paste("marker_genes_", opt$markers_cell_grouping, ".tsv", sep="")
 metadata_names = c("sdrf.txt", "condensed-sdrf.tsv", "idf.txt", markers, 
           paste("https://www.ebi.ac.uk/gxa/sc/experiment", acc, 
           "download?fileType=experiment-design&accessKey=",sep="/"))

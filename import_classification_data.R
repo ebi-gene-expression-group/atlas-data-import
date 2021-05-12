@@ -105,14 +105,23 @@ if(!dir.exists(classifier_out_dir)){
 }
 
 # Wrap download.file for retries and error checking
-download.file.with.retries <- function(link, dest, sleep_time=30, max_retries=5){
-    stat <- 1
+download.file.with.retries <- function(link, dest, sleep_time=10, max_retries=5){
     retries <- 0
-    if(!url.exists(link)){
+    # allow for possible network problems when checking url 
+    while( !url_exists && retries < max_retries){
+        if (retries > 0){
+            Sys.sleep(sleep_time)
+        } 
+        url_exists = url.exists(link)
+        retries <- retries + 1
+    }
+    if(!url_exists){
         print(paste("File ", link, " does not exist. Skipping to next file." ))
         return()
     }
     print(paste("Downloading", link))
+    stat <- 1
+    retries <- 0 
     while( stat != 0 && retries < max_retries){
         if (retries > 0){
             Sys.sleep(sleep_time)
