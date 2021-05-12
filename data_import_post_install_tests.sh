@@ -40,15 +40,13 @@ fi
 ################################################################################
 # List tool outputs/ inputs
 ################################################################################
-export study_accession_num="E-ENAD-14"
+export study_accession_1="E-MTAB-7249"
+export study_accession_2="E-MTAB-6925"
 export matrix_type="cpm"
 export output_dir_name=$test_dir/$study_accession_num
-export num_clusters=22
 export classifiers_output_dir=$test_dir/"imported_classifiers"
 export tool="scpred"
-export condensed_sdrfs="TRUE"
 export sdrf_output_dir=$test_dir/"sdrf_files"
-export user_config_file="example_user_config.yaml"
 export tool_perf_table_output_path=$test_dir/"tool_perf_pvals.tsv"
 
 ################################################################################
