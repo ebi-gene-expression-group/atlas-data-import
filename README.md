@@ -13,7 +13,7 @@ conda install -c bioconda atlas-data-import
 ### Obtain study data from Single Cell Expression Atlas 
 ```
 get_experiment_data.R\
-            --accesssion-code <accession code of the dataset to be extracted>\
+            --accession-code <accession code of the dataset to be extracted>\
             --get-expression-data <should expression data be imported?>\
             --matrix-type <type of expression data to download>\
             --decorated-rows <boolean; use decorated row names?>\
@@ -34,7 +34,7 @@ get_experiment_data.R\
 User can provide a yaml-formatted config file (see [example](example_user_config.yaml)) with specific datasets for which to import classifiers. Otherwise, all available classifiers of a given type are imported. 
 ```
 import_classification_data.R\
-            --accesssion-code <comma-separated string of datasets for which to extract the classifiers>\
+            --accession-code <comma-separated string of datasets for which to extract the classifiers>\
             --tool <which tool's classifiers should be imported>\
             --classifiers-output-dir <output directory for downloaded classifiers>\
             --get-sdrf <should SDRF file(s) be downloaded?>\
