@@ -91,12 +91,14 @@ option_list = list(
         help = "Should marker gene file(s) be downloaded? Default: FALSE"
     ), 
     make_option(
-        c("-g", "--number-of-clusters"),
+        c("-g", "--markers-cell-grouping"),
         action = "store",
         default = "inferred_cell_type_-_ontology_labels",
         type = 'character',
-        help = "Number of clusters for marker gene file. By default, markers 
-                for inferred cell types are downloaded."
+        help = "What type of cell grouping is used for marker gene file? By default, markers 
+                for inferred cell types are downloaded. If supplying an integer value, 
+                an automatically-derived marker gene file for a corresponding number of clusters
+                will be imported."
     ),
     make_option(
         c("-u", "--use-full-names"),
@@ -120,7 +122,6 @@ suppressPackageStartupMessages(require(R.utils))
 suppressPackageStartupMessages(require(RCurl))
 
 acc = opt$accession_code
-print(acc)
 matrix_type = toupper(opt$matrix_type)
 
 # check expression data type
