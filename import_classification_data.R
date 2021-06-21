@@ -23,6 +23,13 @@ option_list = list(
             help = "Which tool's classifiers should be imported?"
         ),
     make_option(
+            c("-e", "--species"),
+            action = "store",
+            default = NA,
+            type = 'character',
+            help = "Which species' classifiers should be imported?"
+        ),
+    make_option(
             c("-c", "--classifiers-output-dir"),
             action = "store_true",
             default = "imported_classifiers",
@@ -80,13 +87,16 @@ option_list = list(
     )
 )
 
-opt = wsc_parse_args(option_list, mandatory = c("tool"))
+opt = wsc_parse_args(option_list, mandatory = c("tool", "species"))
 suppressPackageStartupMessages(require(R.utils))
 suppressPackageStartupMessages(require(RCurl))
 
 tool_perf_table = opt$tool_perf_table_url
 scxa_classifiers_prefix = sub("/$", "", opt$classifiers_prefix)
 scxa_experiments_prefix = sub("/$", "", opt$experiments_prefix)
+
+# subset by species
+scxa_classifiers_prefix = paste(scxa_classifiers_prefix, species, sep="/")
 
 if(!is.na(opt$accession_code)){
     datasets = toupper(wsc_split_string(opt$accession_code))
