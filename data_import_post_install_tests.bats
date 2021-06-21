@@ -28,6 +28,7 @@
     run rm -rf $classifiers_output_dir && import_classification_data.R\
                                             --accession-code "$study_accession_1,$study_accession_2"\
                                             --tool $tool\
+                                            --species $species\
                                             --classifiers-output-dir $classifiers_output_dir\
                                             --get-sdrf\
                                             --condensed-sdrf\

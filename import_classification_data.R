@@ -96,7 +96,7 @@ scxa_classifiers_prefix = sub("/$", "", opt$classifiers_prefix)
 scxa_experiments_prefix = sub("/$", "", opt$experiments_prefix)
 
 # subset by species
-scxa_classifiers_prefix = paste(scxa_classifiers_prefix, species, sep="/")
+scxa_classifiers_prefix = paste(scxa_classifiers_prefix, opt$species, sep="/")
 
 if(!is.na(opt$accession_code)){
     datasets = toupper(wsc_split_string(opt$accession_code))
