@@ -36,6 +36,7 @@ User can provide a yaml-formatted config file (see [example](example_user_config
 import_classification_data.R\
             --accession-code <comma-separated string of datasets for which to extract the classifiers>\
             --tool <which tool's classifiers should be imported>\
+            --species <for which species classifier(s) should be imported?>\
             --classifiers-output-dir <output directory for downloaded classifiers>\
             --get-sdrf <should SDRF file(s) be downloaded?>\
             --condensed-sdrf <if --get-sdrf is set to TRUE, import condensed SDRF? by default, a normal version is imported>\

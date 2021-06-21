@@ -40,8 +40,9 @@ fi
 ################################################################################
 # List tool outputs/ inputs
 ################################################################################
-export study_accession_1="E-MTAB-7249"
+export study_accession_1="E-MTAB-6912"
 export study_accession_2="E-MTAB-6925"
+export species="mus_musculus"
 export matrix_type="cpm"
 export output_dir_name=$test_dir/$study_accession_num
 export classifiers_output_dir=$test_dir/"imported_classifiers"
