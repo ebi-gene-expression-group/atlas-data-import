@@ -67,7 +67,7 @@ option_list = list(
     make_option(
             c("--tool-perf-table-url"),
             action = "store",
-            default = "https://www.ebi.ac.uk/~a_solovyev/prod_testing_data/tool_perf_pvals.tsv",
+            default = "http://ftp.ebi.ac.uk/pub/databases/microarray/data/atlas/cell-types-project-test-data/data_1/tool_perf_pvals.tsv",
             type = 'character',
             help = "URL for import of tool performance table"
     ), 
